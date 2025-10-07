@@ -2,10 +2,10 @@ import { IoSearch } from "react-icons/io5";
 
 export default function SearchSection() {
   return (
-    <section className="flex justify-center items-center shrink-0 p-6 bg-black/10 backdrop-blur-xl">
+    <section className="flex justify-center items-center shrink-0 p-6">
       <form
         action="https://www.google.com/search"
-        className="flex items-center gap-2 w-full max-w-[600px] py-2 px-3 bg-white rounded-full"
+        className="flex items-center gap-2 w-full max-w-[600px] py-2 px-3 bg-white rounded-full common-shadow"
       >
         <IoSearch className="text-2xl" />
         <input
