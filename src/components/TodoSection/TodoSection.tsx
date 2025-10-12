@@ -1,9 +1,9 @@
 import TodoForm from "../TodoForm/TodoForm";
 import { useEffect, useState } from "react";
 import { getTodoDate, getWeek } from "../../utils/date";
-import { getLocalStorage } from "../../utils/localStorage";
+import { getLocalStorage, setLocalStorage } from "../../utils/localStorage";
 import TodoList from "../TodoList/TodoList";
-import type { TodoListType } from "../../types/todo";
+import type { TodoItemType, TodoListType } from "../../types/todo";
 
 export default function TodoSection() {
   const [currentDate, setCurrentDate] = useState(getTodoDate(new Date()));
@@ -12,9 +12,25 @@ export default function TodoSection() {
   useEffect(() => {
     const myTodos = getLocalStorage<TodoListType[]>("myTodos");
     if (myTodos === null) return;
+    console.log(myTodos);
     const findTodos = myTodos.find((todo) => todo.date === currentDate);
     console.log(findTodos);
   }, []);
+
+  const onCreateTodo = (todo: TodoItemType) => {
+    const myTodos = getLocalStorage<TodoListType[]>("myTodos");
+    const nextTodos =
+      currentTodos === null
+        ? { date: currentDate, todos: [todo] }
+        : { ...currentTodos, todos: [...currentTodos.todos, todo] };
+    setCurrentTodos(nextTodos);
+
+    const newLocalStorage = myTodos?.map((todo) =>
+      todo.date === currentDate ? nextTodos : todo
+    );
+
+    setLocalStorage("myTodos", JSON.stringify(newLocalStorage));
+  };
 
   return (
     <article className="flex flex-col w-[40%] max-w-[400px] rounded-2xl common-shadow bg-white overflow-hidden">
@@ -40,7 +56,7 @@ export default function TodoSection() {
       <div className="grow-1 overflow-auto my-2">
         <TodoList currentTodos={currentTodos} />
       </div>
-      <TodoForm />
+      <TodoForm onCreateTodo={onCreateTodo} />
     </article>
   );
 }
